@@ -1,4 +1,12 @@
 import * as React from "react";
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+} from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
 
 class NavMenu extends React.Component<{}, {}> {
@@ -47,5 +55,6 @@ class NavMenu extends React.Component<{}, {}> {
     );
   }
 }
+
 
 export { NavMenu };
