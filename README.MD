@@ -1,4 +1,4 @@
-#John's ASP.NET Core Boilerplate 2.0 w/ SSR React & ReSub
+###John's ASP.NET Core Boilerplate 2.0 w/ SSR React & ReSub
 
 Just a simple implementation of the default React template, there has been some minor changes and tailoring to my liking.
 
