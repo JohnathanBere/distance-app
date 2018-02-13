@@ -1,18 +1,17 @@
-###John's ASP.NET Core Boilerplate 2.0 w/ SSR React & ReSub
+# DistanceApp
 
-Just a simple implementation of the default React template, there has been some minor changes and tailoring to my liking.
+An app created using ASP.NET Core 2, React 16 and ReSub for state management.
 
-/ClientApp is where you have the client-side TypeScript and React code.
-/Controllers are where the merged controllers are
+- Measures the distance and duration between two points dependent on mode of travel.
 
-there will be a locked dependency installation in npm-shrinkwrap.json, delete it and adjust package.json to your liking if you want.
+Files of interest:
+Server-Side
+> Controllers/DistanceDataController.cs
+> Models/
 
-Startup.cs remains untouched, there may be adjustments in the future.
-
-Open the solution for the app
-
-Future[?] goals
-- Implement some unit tests end-to-end.
-- Flesh out ReSub state management examples or just use Redux.
-- Implement ideas surrounding software design patterns such as DDD, repository or factory pattern.
-
+Client-Side
+> ClientApp/actions
+> ClientApp/components/Distance
+> ClientApp/models
+> ClientApp/pages/Distance
+> ClientApp/stores
