@@ -1,12 +1,4 @@
 import * as React from "react";
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-} from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
 
 class NavMenu extends React.Component<{}, {}> {
@@ -39,13 +31,8 @@ class NavMenu extends React.Component<{}, {}> {
                 </NavLink>
               </li>
               <li>
-                <NavLink to={"/counter"} activeClassName="active">
-                  <span className="glyphicon glyphicon-education" /> Counter
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to={"/fetchdata"} activeClassName="active">
-                  <span className="glyphicon glyphicon-th-list" /> Fetch data
+                <NavLink to={"/distance"} activeClassName="active">
+                  <span className="glyphicon glyphicon-map-marker" /> Distance
                 </NavLink>
               </li>
             </ul>

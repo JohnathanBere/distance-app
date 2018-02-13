@@ -1,10 +1,17 @@
 import * as React from "react";
-import { Button } from "reactstrap";
+import { Container } from "reactstrap";
+import { DisplayData, InputFields } from "../components/Distance";
+import { RouteComponentProps as IRCProps } from "react-router-dom";
 
-const Distance: React.SFC = () => (
-    <div>
-        <p>hello</p>
-    </div>
-);
+class Distance extends React.Component<IRCProps<{}>, {}> {
+  render(): JSX.Element {
+    return (
+      <div>
+        <InputFields />
+        <DisplayData />
+      </div>
+    );
+  }
+}
 
 export { Distance };
