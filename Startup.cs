@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DistanceApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -24,6 +21,7 @@ namespace DistanceApp
         {
             services.AddMvc();
             // Use DNC's built in DI to map services to their interfaces...
+            services.AddTransient<IDistance, Distance>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

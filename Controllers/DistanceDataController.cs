@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DistanceApp.Models;
+using DistanceApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -20,34 +20,31 @@ namespace DistanceApp.Controllers
     [Route("api/[controller]")]
     public class DistanceDataController : Controller
     {
-        private static string ApiKey
+        private readonly IDistance _distance;
+
+        public DistanceDataController(IDistance distance)
         {
-            get
-            {
-                return "AIzaSyAif8w9sA7ezwfCPW3mDBWed1HWWTKgWc8";
-            }
+            _distance = distance;
         }
+        
+        private static string ApiKey => "AIzaSyAif8w9sA7ezwfCPW3mDBWed1HWWTKgWc8";
 
         // Imperative to ensure that the base url really is as basic as the url address.
-        private static string BaseUrl
-        {
-            get
-            {
-                return "https://maps.googleapis.com";
-            }
-        }
+        private static string BaseUrl => "https://maps.googleapis.com";
 
         // This method will be making a call to an external api.
         [HttpGet("distance/{origin?}/{destination?}/{mode?}/{unit?}")]
         public async Task<IActionResult> GetDistanceData(string origin, string destination, string mode, string unit)
         {
-            // Could store this in a service and just DI it into the api controller. Should keep this controller method slim-line in the future...
             // To ensure clean-up
             using (var client = new HttpClient())
             {
                 try
                 {
+                    // Shorthand string.format to place parameters in the url
                     var suffix = $"/maps/api/distancematrix/json?units={unit}&origins={origin}&destinations={destination}&mode={mode}&key={ApiKey}";
+                    
+                    // sets the base address of the client, in this instance, Google's Distance Matrix
                     client.BaseAddress = new Uri(BaseUrl);
                     
                     // Waits for a response from the suffixed address
@@ -62,23 +59,8 @@ namespace DistanceApp.Controllers
                     // Deserializes the string response to be a model that maps the response 1:1.
                     var rawDistData = JsonConvert.DeserializeObject<DistanceResponseData>(stringRes);
                     
-                    // For now, assume we are getting the first available value in each collection.
-                    // use null coalesing to throw exceptions if we get null values at these key points
-                    var row = rawDistData.Rows.FirstOrDefault() ?? throw new NullReferenceException();
-                    var element = row.Elements.FirstOrDefault() ?? throw new NullReferenceException();
-
-                    // Maps hydrated DistanceResponseData model to a ViewModel to be consumed by client
-                    var dvm = new DistanceViewModel()
-                    {
-                        StartPoint = rawDistData.Origin_Addresses.FirstOrDefault(),
-                        EndPoint = rawDistData.Destination_Addresses.FirstOrDefault(),
-                        DurationText = element.Duration.Text,
-                        DistanceText = element.Distance.Text,
-                        DurationValue = element.Duration.Value,
-                        DistanceValue = element.Distance.Value,
-                        TransportMode = mode,
-                        Units = unit
-                    };
+                    // Calls a service to further format the deserialized data.
+                    var dvm = _distance.GetDistanceViewModel(rawDistData);
                     
                     // Returns a status code with the parsed info
                     return Ok(dvm);

@@ -35,8 +35,8 @@ class InputFields extends React.Component<{}, InputFieldsState> {
     const { origin, destination, transportMode, units } = this.state;
 
     DistanceStore.retrieveDistance(
-      decodeURI(origin),
-      decodeURI(destination),
+      origin,
+      destination,
       transportMode,
       units
     );
@@ -48,10 +48,11 @@ class InputFields extends React.Component<{}, InputFieldsState> {
         <Form>
           <br />
           <FormGroup>
+            <Label for="origin">From: </Label>
             <Input
               type="text"
               id="origin"
-              placeholder="From"
+              placeholder="Enter where you are travelling from..."
               onChange={e =>
                 this.setState({
                   origin: e.currentTarget.value
@@ -61,10 +62,11 @@ class InputFields extends React.Component<{}, InputFieldsState> {
           </FormGroup>
 
           <FormGroup>
+            <Label for="destination">To: </Label>
             <Input
               type="text"
               id="destination"
-              placeholder="To"
+              placeholder="Enter where you are travelling to..."
               onChange={e =>
                 this.setState({
                   destination: e.currentTarget.value
@@ -85,10 +87,10 @@ class InputFields extends React.Component<{}, InputFieldsState> {
               }
             >
               <option value="driving">Car</option>
-              <option value="transit&transitMode=bus">Bus</option>
-              <option value="transit&transitMode=train">Train</option>
               <option value="bicycling">Bicycle</option>
               <option value="walking">Foot</option>
+              <option value="transit&transitMode=bus">Bus</option>
+              <option value="transit&transitMode=train">Train</option>
             </Input>
           </FormGroup>
 
