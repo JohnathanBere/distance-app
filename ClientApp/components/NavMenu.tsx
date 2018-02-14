@@ -1,47 +1,53 @@
 import * as React from "react";
+import { Navbar, NavItem, Collapse, NavbarToggler, Nav } from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
 
-class NavMenu extends React.Component<{}, {}> {
-  public render(): JSX.Element {
+interface INavMenuState {
+  isOpen: boolean;
+}
+
+class NavMenu extends React.Component<{}, INavMenuState> {
+  state = { isOpen: false };
+
+  private _toggle(): void {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
+
+  render(): JSX.Element {
     return (
-      <div className="main-nav">
-        <div className="navbar navbar-inverse">
-          <div className="navbar-header">
-            <button
-              type="button"
-              className="navbar-toggle"
-              data-toggle="collapse"
-              data-target=".navbar-collapse"
-            >
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar" />
-              <span className="icon-bar" />
-              <span className="icon-bar" />
-            </button>
-            <Link className="navbar-brand" to={"/"}>
-              DistanceApp
-            </Link>
-          </div>
-          <div className="clearfix" />
-          <div className="navbar-collapse collapse">
-            <ul className="nav navbar-nav">
-              <li>
-                <NavLink to={"/"} exact activeClassName="active">
-                  <span className="glyphicon glyphicon-home" /> Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to={"/distance"} activeClassName="active">
-                  <span className="glyphicon glyphicon-map-marker" /> Distance
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <Navbar color="warning" light expand="md" fixed="top">
+        <Link className="navbar-brand" to={"/"}>
+          DistanceApp
+        </Link>
+        <NavbarToggler onClick={this._toggle.bind(this)} />
+        <Collapse isOpen={this.state.isOpen} navbar>
+          <Nav className="ml-auto" navbar>
+            <NavItem>
+              <NavLink
+                className="nav-link"
+                exact
+                activeClassName="active"
+                to={"/"}
+              >
+                Home
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                className="nav-link"
+                activeClassName="active"
+                to={"/distance"}
+              >
+                Distance
+              </NavLink>
+            </NavItem>
+          </Nav>
+        </Collapse>
+      </Navbar>
     );
   }
 }
-
 
 export { NavMenu };

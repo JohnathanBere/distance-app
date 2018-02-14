@@ -7,14 +7,15 @@ export interface ILayoutProps {
 }
 
 const Layout: React.SFC<ILayoutProps> = ({ children }: ILayoutProps) => (
-  <Container fluid>
-    <Row>
-      <Col sm="3">
-        <NavMenu />
-      </Col>
-      <Col sm="9">{children}</Col>
-    </Row>
-  </Container>
+  <div>
+    <NavMenu />
+    <div className="navbar-margin"></div>
+    <Container>
+      <Row>
+        <Col sm="12">{children}</Col>
+      </Row>
+    </Container>
+  </div>
 );
 
 export { Layout };

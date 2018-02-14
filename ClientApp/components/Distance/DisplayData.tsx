@@ -18,12 +18,12 @@ class DisplayData extends ComponentBase<{}, IDisplayDataState> {
 
   private _renderData(data: IDistanceData): JSX.Element {
     return (
-      <div>
+      <Container>
         <h2>{data.distanceText ? `Total distance: ${data.distanceText}` : ""}</h2>
         <h2>{data.durationText ? `Total duration: ${data.durationText}` : ""}</h2>
         <h2>{data.startPoint ? `From: ${data.startPoint}` : ""}</h2>
         <h2>{data.endPoint ? `To: ${data.endPoint}` : ""}</h2>
-      </div>
+      </Container>
     );
   }
 
