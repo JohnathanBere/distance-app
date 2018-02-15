@@ -6,8 +6,10 @@ import {
   Form,
   FormGroup,
   Button,
-  Label
+  Label,
+  Alert
 } from "reactstrap";
+import { ComponentBase } from "resub";
 import { DistanceStore } from "../../stores/DistanceStore";
 
 interface InputFieldsState {
@@ -15,44 +17,59 @@ interface InputFieldsState {
   destination: string;
   transportMode: string;
   units: string;
+  callbackRejected: boolean;
 }
 
-class InputFields extends React.Component<{}, InputFieldsState> {
-  constructor(props: {}, state: InputFieldsState) {
-    super(props, state);
-
-    this._fetchDistanceData = this._fetchDistanceData.bind(this);
-
-    this.state = {
+/**
+ * This container gets a series of inputs to make a call to the back-end
+ * There is basic validation that returns a rejected promise if origin and
+ * destination are not valid.
+ */
+class InputFields extends ComponentBase<{}, InputFieldsState> {
+  protected _buildState(props: {}, initialBuild: boolean): InputFieldsState {
+    return {
       origin: "",
       destination: "",
       transportMode: "car",
-      units: "imperial"
+      units: "imperial",
+      callbackRejected: DistanceStore.getCallbackRejection()
     };
   }
 
   private _fetchDistanceData(): void {
     const { origin, destination, transportMode, units } = this.state;
 
-    DistanceStore.retrieveDistance(
-      origin,
-      destination,
-      transportMode,
-      units
-    );
+    DistanceStore.retrieveDistance(origin, destination, transportMode, units);
   }
 
   render(): JSX.Element {
     return (
       <Col>
         <Form>
-          <br />
+          <Alert color="danger" isOpen={this.state.callbackRejected}>
+            Use appropriate travel points:
+            <ul>
+              <li>
+                You must ensure both fields for travelling from and to addresses
+                are completed.
+              </li>
+              <li>
+                There must only be single addresses when travelling from and
+                travelling to.
+              </li>
+              <li>
+                The addresses should within reachable distance (no travelling
+                accross great Oceans).
+              </li>
+            </ul>
+          </Alert>
           <FormGroup>
             <Label for="origin">From: </Label>
             <Input
               type="text"
               id="origin"
               placeholder="Enter where you are travelling from..."
+              value={this.state.origin}
               onChange={e =>
                 this.setState({
                   origin: e.currentTarget.value
@@ -67,6 +84,7 @@ class InputFields extends React.Component<{}, InputFieldsState> {
               type="text"
               id="destination"
               placeholder="Enter where you are travelling to..."
+              value={this.state.destination}
               onChange={e =>
                 this.setState({
                   destination: e.currentTarget.value
@@ -95,7 +113,7 @@ class InputFields extends React.Component<{}, InputFieldsState> {
           </FormGroup>
 
           <FormGroup tag="fieldset">
-            <legend>Distance in:</legend>
+            <legend>Distance to be measured in:</legend>
             <FormGroup check>
               <Label check>
                 <Input

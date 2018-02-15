@@ -3,10 +3,15 @@ import { IDistanceData } from "../models/DistanceData";
 import { distanceDataCallback as call } from "../actions/distanceDataCallback";
 import * as _ from "es6-promise";
 
+/**
+ * This is a class that observes changes for the client models, populating them with data
+ * coming from a server.
+ */
 @AutoSubscribeStore
 class DistanceStore extends StoreBase {
   // initializes an empty model
   private _distanceData: IDistanceData = {};
+  private _callbackRejected: boolean = false;
   // methods to get store and populate common app state
   static TriggerKeys = {
     Get: "get"
@@ -22,7 +27,10 @@ class DistanceStore extends StoreBase {
     // from the back-end.
     await call(origin, destination, travelMode, units)
       .then(response => response.json() as _.Promise<IDistanceData>)
-      .then(data => (this._distanceData = data));
+      .then(
+        data => ((this._distanceData = data), (this._callbackRejected = false))
+      )
+      .catch(err => (this._callbackRejected = true));
 
     this.trigger(DistanceStore.TriggerKeys.Get);
   }
@@ -30,6 +38,11 @@ class DistanceStore extends StoreBase {
   @autoSubscribeWithKey(DistanceStore.TriggerKeys.Get)
   getDistanceData(): IDistanceData {
     return this._distanceData;
+  }
+
+  @autoSubscribeWithKey(DistanceStore.TriggerKeys.Get)
+  getCallbackRejection(): boolean {
+    return this._callbackRejected;
   }
 }
 
